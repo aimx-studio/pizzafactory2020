@@ -888,6 +888,21 @@
 
 </div><!-- /wrapper -->
 
+<!-- MODAL TOPPINGS -->
+<div id="modalToppings" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span id="modalPizzaNombre">Toppings</span>
+      <button type="button" class="modal-cerrar" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="toppings-grid modal-grid" id="modalGrid"></div>
+    <div class="modal-footer">
+      <span class="modal-subtotal" id="modalSubtotal">$0</span>
+      <button type="button" class="btn-confirmar-modal" onclick="confirmarToppings()">✅ Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script src="scrip.js"></script>
 </body>
 </html>
