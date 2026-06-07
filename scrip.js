@@ -577,8 +577,8 @@ function enviarPedido(e) {
   window.location.href = 'https://wa.me/573123332244?text=' + encodeURIComponent(msg);
 
   // Enviar a Supabase si está configurado
-  const SUPABASE_URL = document.getElementById('supabaseUrl').value.trim();
-  const SUPABASE_KEY = document.getElementById('supabaseKey').value.trim();
+  const SUPABASE_URL = 'https://hotryxyvbdbizfivgfft.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdHJ5eHl2YmRiaXpmaXZnZmZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MDk1MDMsImV4cCI6MjA5MjM4NTUwM30.e_8rXHLVKl8gGH7r65LzCbXpLVygnHJf3lSvYXqosfw';
   if (SUPABASE_URL && SUPABASE_KEY) {
     const payload = {
       Fecha: new Date().toISOString(),
@@ -588,9 +588,11 @@ function enviarPedido(e) {
       Entrega: entrega,
       Direccion: entrega === 'A domicilio' ? direccion : '',
       Pago: pago,
+      Efectivo: pago === 'Efectivo' ? efectivo : '',
+      Extras: especificaciones || '',
       Total: document.getElementById('totalPedido').value
     };
-    fetch(SUPABASE_URL + '/rest/v1/pedidos', {
+    fetch(SUPABASE_URL + '/rest/v1/pizzafactory', {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_KEY,
@@ -602,15 +604,23 @@ function enviarPedido(e) {
     }).catch(err => console.warn('Supabase error:', err));
   }
 
-  // Enviar a Google Apps Script si está configurado
-  const APPS_URL = document.getElementById('appsScriptUrl').value.trim();
-  if (APPS_URL) {
-    fetch(APPS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ nombre, telefono, platos: platos.join(' | '), entrega, direccion, pago, total })
-    }).catch(err => console.warn('Apps Script error:', err));
-  }
+  // Enviar a Google Forms (registro en Sheets)
+  const gfData = new FormData();
+  gfData.append('entry.161230881', new Date().toLocaleString('es-CO'));
+  gfData.append('entry.904305260', nombre);
+  gfData.append('entry.87573575', telefono);
+  gfData.append('entry.1776389004', platos.join(' | '));
+  gfData.append('entry.1002626749', entrega);
+  gfData.append('entry.961984748', entrega === 'A domicilio' ? direccion : '');
+  gfData.append('entry.280880733', pago);
+  gfData.append('entry.766371234', pago === 'Efectivo' ? efectivo : '');
+  gfData.append('entry.428776409', especificaciones || '');
+  gfData.append('entry.1073773668', document.getElementById('totalPedido').value);
+  fetch('https://docs.google.com/forms/d/e/1FAIpQLScxcosw60mqb_SwgR3DPcYJeeKimfDCLmopMsQx__-EyI9x6Q/formResponse', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: gfData
+  }).catch(err => console.warn('Google Forms error:', err));
 }
 
 // ===== GUARDAR CONFIG =====
