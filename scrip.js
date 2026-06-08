@@ -573,8 +573,10 @@ function enviarPedido(e) {
     btn.textContent = '📲 Enviar Pedido por WhatsApp';
   }, 5000);
 
-  // Enviar a WhatsApp
-  window.location.href = 'https://wa.me/573123332244?text=' + encodeURIComponent(msg);
+  // Enviar a WhatsApp PRIMERO (sin bloquear)
+  setTimeout(() => {
+    window.location.href = 'https://wa.me/573123332244?text=' + encodeURIComponent(msg);
+  }, 0);
 
   // Enviar a Supabase si está configurado
   const SUPABASE_URL = 'https://hotryxyvbdbizfivgfft.supabase.co';
