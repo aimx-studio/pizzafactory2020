@@ -494,10 +494,9 @@ function enviarPedido(e) {
     const nombre = cb.value;
     const tamanoSel = item.querySelector('.tamano');
     const saborSel = item.querySelector('.sabor');
-    let detalle = nombre;
-    if (tamanoSel) detalle += ` (${tamanoSel.options[tamanoSel.selectedIndex].text})`;
+    let detalle = `${cantidad}x ${nombre}`;
+    if (tamanoSel) detalle += ` (${tamanoSel.options[tamanoSel.selectedIndex].text.split(' —')[0]})`;
     if (saborSel) detalle += ` (${saborSel.options[saborSel.selectedIndex].text})`;
-    detalle += ` x${cantidad}`;
 
     // Toppings (desde toppingState)
     const toppingsSeleccionados = [];
@@ -512,7 +511,7 @@ function enviarPedido(e) {
       }
     }
     if (toppingsSeleccionados.length > 0) {
-      detalle += `\n   ➕ Toppings: ${toppingsSeleccionados.join(', ')}`;
+      detalle += ` | ➕ Toppings: ${toppingsSeleccionados.join(', ')}`;
     }
 
     platos.push(detalle);
@@ -529,7 +528,7 @@ function enviarPedido(e) {
         const tops = [...toppingState[lineaId]].map(tIdx =>
           `${TOPPINGS[tIdx].nombre} (+${formatCOP(TOPPINGS[tIdx].precios[idxExtra])})`
         );
-        detalleExtra += `\n   ➕ Toppings: ${tops.join(', ')}`;
+        detalleExtra += ` | ➕ Toppings: ${tops.join(', ')}`;
       }
       platos.push(detalleExtra);
     });
